@@ -1,0 +1,6 @@
+1,log
+- hosts: ##ip##
+  tasks:
+    - name: Log Output
+    - shell: cat ##log##
+    - shell: dmesg

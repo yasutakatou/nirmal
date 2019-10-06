@@ -1,0 +1,1912 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title> = NiRmAl = </title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="http://127.0.0.1/introjs.css">
+    <style type="text/css">
+
+    /* 3分事に背景色が変わる */
+    body{
+      -webkit-animation: bg 180s infinite;
+    }
+    @-webkit-keyframes bg{
+      0%{background-color: #e74c3c;}
+      20%{background-color: #f1c40f;}
+      40%{background-color: #1abc9c;}
+      60%{background-color: #3498db;}
+      80%{background-color: #9b59b6;}
+      100%{background-color: #e74c3c;}
+    }
+
+    /* コードのソートを許可する */
+    #sortable {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 各コード区切り内の設定 */
+    .faq li {
+      background-color: #1abc9c;
+      border-radius: 4px;
+      color: #000;
+      line-height: 20px;
+      -webkit-transition: none;
+      transition: none;
+      box-shadow: 0 3px 0 #0e8c73;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+    }
+    .faq li:hover {
+      background-color: #31c8aa;
+      box-shadow: 0 3px 0 #23a188;
+    }
+    .faq li:active {
+      top: 3px;
+      box-shadow: none;
+    }
+    .faq p {
+      margin: 0;
+      display: none;
+    }
+
+    /* メニュー内の設定 */
+    .menu li {
+      display: block;
+      text-align: center;
+      border: 1px solid #15aeec;
+      background-color: #49c0f0;
+      border-radius: 4px;
+      color: #fff;
+      line-height: 25px;
+      -webkit-transition: none;
+      transition: none;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+    }
+    .menu li:hover {
+      border:1px solid #1090c3;
+      background-color: #1ab0ec;
+    }
+    .menu li:active {
+      background: #1a92c2;
+      box-shadow: inset 0 3px 5px rgba(0, 0, 0, .2);
+      color: #1679a1;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, .5);
+    }
+
+    /* ハンバーガーメニュー用の設定 */
+    #ham-menu {
+        background-color: #fff;
+        box-sizing: border-box;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        transition: transform 0.12s linear 0.12s;
+        padding: 0px 0px;
+        width: 300px;
+        right: 0px;
+        /*
+        right: -300px;
+        */
+    }
+    #ham-menu::before {
+        background-color: #fff;
+        border-radius: 0 0 0 10px;
+        color: #333;
+        content: "≡";
+        display: block;
+        font-size: 50px;
+        height: 50px;
+        line-height: 50px;
+        position: absolute;
+        right: 100%;
+        text-align: center;
+        top: 0;
+        width: 50px;
+    }
+    #menu-background {
+        background-color: #333;
+        display: block;
+        height: 100%;
+        opacity: 0;
+        position: fixed;
+        right: 0;
+        top: 0;
+        transition: all 0.3s linear 0s;
+        width: 100%;
+        z-index: -1;
+    }
+    #menuclose {
+      margin:0 auto;
+      text-align:right;
+      border-radius: 4px;
+      line-height: 25px;
+      -webkit-transition: none;
+      transition: none;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+    }
+
+    /* リポジトリ画面用の設定 */
+    .tab-content input[type="radio"] {
+      display: none;
+    }
+    .tab-content label {
+      display: inline-block;
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 13px;
+      color: #009900;
+      background-color: #e1fae1;
+      cursor: pointer;
+      box-shadow: inset -1px 1px 2px rgba(0, 0, 0, 0.3);
+      border-radius: 5px 5px 0 0;
+      box-sizing: border-box;
+    }
+    .tab-content label:hover,
+    .tab-content input[type="radio"]:checked + label {
+      color: #FFF;
+      background-color: #009900;
+    }
+    .tab-content .tab-box {
+      padding: 10px;
+      border: 2px solid #009900;
+      border-radius: 0 5px 5px 5px;
+      box-sizing: border-box;
+
+      background-color: #1abc9c;
+      color: #000;
+      -webkit-transition: none;
+      transition: none;
+      box-shadow: 0 3px 0 #0e8c73;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+      list-style:none;
+    }
+    #tab2 h4 {
+      margin: 0;
+      display: flex;
+    }
+    .tab-content h4 {
+      margin: 0;
+      display: flex;
+    }
+    .tab-content li:hover {
+      background-color: #31c8aa;
+      box-shadow: 0 3px 0 #23a188;
+    }
+    .tab-content li:active {
+      top: 3px;
+      box-shadow: none;
+    }
+    .tab-content > .tab-box > div {
+      display: none;
+    }
+    #tab1:checked ~ .tab-box > #tabView1 {
+      display: block;
+    }
+    #tab2:checked ~ .tab-box > #tabView2 {
+      display: block;
+    }
+
+    /* LocalStorageが無い場合のデフォルト画面用の設定 */
+    .menu1 {
+      margin: 0;
+      display: flex;
+      width: 33%;
+    }
+
+    /* コード類推機能用の画面設定 */
+    .dmenu li {
+      display: inline-block;
+      text-align: center;
+      background-color: #1abc9c;
+      border-radius: 4px;
+      color: #000;
+      line-height: 20px;
+      -webkit-transition: none;
+      transition: none;
+      box-shadow: 0 3px 0 #0e8c73;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
+      list-style-type: none;
+    }
+    .danswer {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+     </style>
+</HEAD> 
+<BODY>
+<div id="ham-menu">
+  <!-- ハンバーガーメニュー欄 -->
+  <div id="menuclose">[×]</div>
+  <ul class="menu">
+    <li class="toggle" style="background-color:#09C;" data-step="1" data-intro="1. モード選択<br>このボタンをクリックすることで参照できるソースを切り替えます。<br>Public:公開コード Custom:個人作成コード Document:ドキュメント">Public</li>
+    <li>UserName: <input type="text" id="username" data-step="2" data-intro="2. ユーザー名入力欄<br>ユーザー名を入力して先のモード選択ボタンを押してモードを切り替えます。"></li>
+    <li>Menu<br><span class="listmenu" ng-app="App" ng-controller="public" data-step="3" data-intro="3. メニュープルダウン<br>モードにあわせたドキュメントタイトルを表示します。選択すると最後尾に追加されます。">
+      <select id="public" ng-model="public.selectValue" ng-select-event expanded="public.onOpened()" unexpanded="public.onClosed()"  nonchanged="public.onNonChanged()" ng-change="public.onChanged()">
+        <option value="--">--</option>
+      </select></span>
+    </li>
+    <li id="save" data-step="4" data-intro="4. ファイル保存<br>全コード／ドキュメントをファイルに保存します。形式はHTMLであり整形されていません。<br>ファイル読み込み時に指定出来る形式になります。">[Save]</li>
+    <li id="load" data-step="5" data-intro="5. ファイル読み込み<br>ファイルからコード／ドキュメントを読み込みます。先のファイル保存で出力したファイルを指定してください。">[Load]<br><input type="file" id="loads"></li>
+    <li id="repolist" data-step="6" data-intro="6. リポジトリ<br>アカウント毎のリポジトリを表示します。<br>[Global Word]タブに切り替える事で予約単語を設定できます。<br>予約単語は優先して置き換えが発生するワードです。">[Repository]</li>
+    <li id="export" data-step="7" data-intro="7. エクスポート<br>全コード／ドキュメントを実行形式に整形してファイルに保存します。[Load]では読み込みはできません。">[Export]</li>
+    <li id="import" data-step="8" data-intro="8. インポート<br>テキストを読み込み、コード部分とドキュメント部分を自動的に仕分けします。元の表示は全て消えます。">[Import]<input type="file" id="imports" accept="text/*"></li>
+    <li id="new" data-step="9" data-intro="9. 新規コード／ドキュメント追加<br>新規作成します。名前を入力してEnterを押すと作成されます。<br>空欄は詰められる事と、同名は使えないので注意です。">[New]</li>
+    <li id="rnum" data-step="10" data-intro="10. 並べなおし／リフレッシュ<br>順序がバラバラになったものを上から1～で振り直しします。">[reNumber]</li>
+    <li id="lsave" data-step="11" data-intro="11. 自動保存時刻<br>自動的保存された最後の時刻を表示します。<br>押してもアクションはありません。">Last Saved<br><span id="lastsavetime">--</span></li>
+    <li id="clear" data-step="12" data-intro="12. クリア<br>表示されている全コード／ドキュメントを消去します。">[Clear]</li>
+    <li id="help">[Help]</li>
+  </div>
+<div id="menu-background"></div>
+<!-- Localstorageに何も保存されていない場合のデフォルト画面 -->
+<ul class="faq" id="sortable">
+<li id="code1" style="background-color:#EDF7AA;">
+<h4 class="menu1"><li id="Del1">[DEL]</li></h4>
+<h3 class="question1">Getting Started #1</h3>
+<BR>
+<p class="answer1">Hello World!</p>
+</li>
+</ul>
+<!-- ロードするJavaScriptのライブラリ。jquery -->
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<!-- ロードするJavaScriptのライブラリ。angular.js -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+<!-- ロードするJavaScriptのライブラリ。FileSaver.js。ファイルの読み込み/保存 -->
+<script src="https://cdn.rawgit.com/eligrey/Blob.js/0cef2746414269b16834878a8abc52eb9d53e6bd/Blob.js"></script>
+<script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
+<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
+<!-- ロードするJavaScriptのライブラリ。guessLanguage.js。言語判定をする。 -->
+<script src="http://127.0.0.1/_languageData.js"></script>
+<script src="http://127.0.0.1/guessLanguage.js"></script>
+<!-- ロードするJavaScriptのライブラリ。intro.js。ヘルプ画面生成用。 -->
+<script src="http://127.0.0.1/intro.js"></script>
+<script>
+
+//・グローバル変数の定義
+//　Pythonのバックエンドへのパス。FQDNとポートの定義
+var FQDN = 'http://127.0.0.1:2960';
+//　全コード／ドキュメント数の格納
+var counts = 1;
+//　メニュー欄のバックエンドロード用変数
+var menu_flg = 0;
+//　メニュー欄の状態用変数
+var menus_flg = 0;
+//　現在の動作モード用変数
+var switch_flg = 3;
+
+//メニュー操作に関する変数。メニューのプルダウンを開いたとき内容書き換えや選択時のコード／ドキュメントの追加
+(function(window, jQuery, angular) {
+  'use strict';
+
+  var module = angular.module('App', []);
+
+  module.controller('public', [
+    '$scope',
+    function($scope) {
+      $scope.public = this;
+
+      //メニュー選択時。コードを読み込んで最後に追加する。
+      this.onChanged = function() {
+        var cod = document.getElementById('public').value;
+        if (cod < 1) { return; }
+        var txt = document.getElementById('public')[cod].textContent;
+        var username = $("#username").val();
+
+        counts = counts + 1;
+
+        var cmd = '';
+        var html = '';
+        switch (switch_flg){
+          case 1:
+            cmd = FQDN + '?ccode=' + cod + '=' + username;
+            html = htmlcall(1,counts,txt,3) + '<BR>';
+            break;
+          case 2:
+            cmd = FQDN + '?cdoc=' + cod + '=' + username;
+            html = htmlcall(1,counts,txt,5) + '<BR>';
+            break;
+          default:
+            cmd = FQDN + '?pcode=' + cod
+            html = htmlcall(1,counts,txt,1);
+        }
+
+        secajax(cmd).then(
+          function(ret) {
+            if (ret[0] == 'fail') { return; }
+            var recv = ret[0].split(/\r\n|\r|\n/);
+            
+            switch (switch_flg){
+              case 3:
+                var boxs = recv[1].split(/,/);
+                  for (var i = 0 ; i < boxs[0] ; i++ ) {
+                    html = html + '<p class="answer'+ counts + '">' + boxs[i + 1] + ': <input type="text" id="' + counts + boxs[i + 1] + '"></p>\r';
+                }
+                html = html + '<BR>';
+                for (var i = 2 ; i < recv.length; i++) {
+                  if (recv[i].length > 1) { html = html + '<p class="answer'+ counts + '">' + recv[i] + '</p>\r'; }
+                }
+                html = html + '</li>';
+                break;
+              default:
+                for (var i = 0 ; i < recv.length; i++) {
+                  if (recv[i].length > 1) { html = html + '<p class="answer'+ counts + '">' + recv[i] + '</p>\r'; }
+                }
+                html = html + '</class></li>';
+                break;
+            }
+            
+            $(document).ready(function(){
+              $('.faq').append(html);
+              $('#public').val('').change();
+            });
+            mclose();
+        });
+    };
+
+      //メニューを開いた時。バックエンドでロードした一覧を描画
+      this.onOpened = function() {
+
+        var sl = document.getElementById('public');
+        while(sl.lastChild) {
+          sl.removeChild(sl.lastChild);
+        }
+
+        let op = document.createElement("option");
+        op.value = "1";
+        if (menus.length < 1) { return; }
+
+        var option = document.createElement('option');
+        option.setAttribute('value','0');
+        option.innerHTML = ' --- ';
+        document.getElementById("public").appendChild(option);
+
+        for (var i = 0; i < menus.length; i++) {
+          if (menus[i].length > 1) {
+            var arg = menus[i].split(/\t/);
+            var option = document.createElement('option');
+            option.setAttribute('value', arg[0]);
+            option.innerHTML = arg[1];
+            document.getElementById("public").appendChild(option);
+          }
+        }
+      };
+    }
+  ]);
+
+  module.directive('ngSelectEvent', [
+    '$timeout',
+    function($timeout) {
+      return {
+        restrict: 'A',
+        scope: {
+          expanded: '&',
+          unexpanded: '&',
+          nonchanged: '&'
+        },
+        link: function(scope, element, atts, ctrl) {
+          var jQueryElement = jQuery(element);
+          
+          var WATCH_EXPAND_EVENTS = 'click';
+          var WATCH_UNEXPAND_EVENTS = 'click blur keyup';
+          
+          jQueryElement.data('expanded', false);
+
+          var __expanding = function() {
+            jQueryElement.off(WATCH_EXPAND_EVENTS, __expanding);
+            jQueryElement.data('expanded', true);
+            jQueryElement.data('oldvalue', jQueryElement.val());
+            jQueryElement.on(WATCH_UNEXPAND_EVENTS, __unexpanding);
+
+            (scope.expanded)();
+          };
+
+          var __unexpanding = function() {
+            jQueryElement.off(WATCH_UNEXPAND_EVENTS, __unexpanding);
+            jQueryElement.data('expanded', false);
+            jQueryElement.on(WATCH_EXPAND_EVENTS, __expanding);
+
+            (scope.unexpanded)();
+            
+            var oldValue = jQueryElement.data('oldvalue');
+            $timeout(function() {
+              var newValue = jQueryElement.val();
+              if (oldValue == newValue) {
+                (scope.nonchanged)();
+              }
+            }, 0);
+          };
+
+          jQueryElement.on(WATCH_EXPAND_EVENTS, __expanding);
+        }
+      };
+    }
+  ]);
+})(window, window.jQuery, window.angular);
+
+//メニュー欄に近づいた時にバックエンドロードする。menu_flgはロードしっぱなしを避けるために使用している。
+$(function() {
+  $('.listmenu').mouseenter(function() {
+    if (menu_flg == 0) {
+      menu_flg = 1;
+      var username = $("#username").val();
+      var cmd = '';
+      switch (switch_flg){
+        case 1:
+          cmd = FQDN + '?index=customc=' + username;
+          break;
+        case 2:
+          cmd = FQDN + '?index=customd=' + username;
+          break;
+        default:
+          cmd = FQDN + '?index=public';
+      }
+      secajax(cmd).then(
+        function(ret) {
+          if (ret[0] == 'fail') { return; }
+          menus = ret[0].split(/\r\n|\r|\n/);
+      });
+    }
+  })
+  .mouseleave(function() {
+    menu_flg = 0;
+  });
+});
+
+//モード欄の挙動。Public→Custom→Document→Public・・・というように遷移する。遷移時にswitch_flgの値を変更する
+$(".toggle").click(function(){
+  var username = $("#username").val();
+  
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (ret.indexOf('fail') > -1) {
+          alert('UserName ' + username + ' not Found');
+          $("#username").val("");
+          return;
+        }
+        var cmd = '';
+        switch (switch_flg){
+          case 1:
+            switch_flg = 2;
+            $("#username").prop('disabled', true);
+            $(".toggle").html('<li class="toggle" style="background-color:#09C;">Document</li>');
+            $(".toggle").css("background-color", "#AA0");
+            break;
+          case 2:
+            switch_flg = 3;
+            $("#username").prop('disabled', false);
+            $(".toggle").html('<li class="toggle" style="background-color:#09C;">Public</li>');
+            $(".toggle").css("background-color", "#09C");
+            break;
+          default:
+            switch_flg = 1;
+            $("#username").prop('disabled', true);
+            $(".toggle").html('<li class="toggle" style="background-color:#09C;">Custom</li>');
+            $(".toggle").css("background-color", "#F60");
+            break;
+        }
+        $("#username").val(username);
+      
+    });
+  }
+});
+
+//コード／ドキュメントのソート機能
+$("#sortable").sortable({
+  revert: true,
+  axis:'y',
+  stop: function(event, ui) {
+    if(!ui.item.data('tag') && !ui.item.data('handle')) {
+      ui.item.data('tag', true);
+    }
+  }
+});
+
+//コード／ドキュメントのドラック機能
+$("#draggable").draggable({
+  connectToSortable: '#sortable',
+  helper: 'clone',
+  axis: 'y',
+  revert: 'invalid'
+});
+
+//コード／ドキュメントの折り畳みと展開
+$(document).on("click","[class^=question]", function() {
+  id = $(this).attr("class");
+  var cod = id.replace(/question/g, "");
+  $('.answer' + cod).slideToggle(300);
+});
+
+//Deleteボタン。押されると[ok?]に書き換えるだけ。
+$(document).on("click", "[id^=Del]", function () {
+  id = $(this).attr("id");
+  var cod = id.replace(/Del/g, "");
+  $('#Del' + cod).html('<li id="okDel' + cod + '">[ok?]</li>');
+});
+
+//[ok?]時に押されると該当コード／ドキュメントを消去する。
+$(document).on("click", "[id^=okDel]", function () {
+  id = $(this).attr("id");
+  var cod = id.replace(/okDel/g, "");
+  $('.menu' + cod).html('');
+  $('.answer' + cod).remove();
+  $('.question' + cod).remove();
+  $('.menu' + cod).remove();
+  $('#code' + cod).remove();
+});
+
+//Promiseで一度に投げ込んだHttpリクエストを非同期ぽくまとめて取得する。
+function secajax(urls) {
+  var jqXHRList = [];
+  var ret = [];
+  var dfd = new $.Deferred;
+
+  var cmd = urls.split(/,/);
+
+  for (var i = 0; i <= cmd.length; i++) {
+    jqXHRList.push($.ajax({ 
+        url: cmd[i],
+        type: 'GET'
+    }));
+  }
+
+  $.when.apply($, jqXHRList).done(function () {
+    for (var i = 0; i < arguments.length - 1; i++) {
+      ret.push(arguments[i][0]);
+    }
+    dfd.resolve(ret);
+  }).fail(
+    function(jqXHR, textStatus, errorThrown){
+      return 'fail';
+    }
+  );
+
+  return dfd.promise();
+}
+
+//認証関数。ユーザー名のエントリがあるかを確認する。
+function auth(name) {
+  var jqXHRList = [];
+  var dfd = new $.Deferred;
+
+  jqXHRList.push($.ajax({ 
+      url: 'http://127.0.0.1:2960?auth=' + name,
+      type: 'GET'
+  }));
+
+  $.when.apply($, jqXHRList).done(function () {
+    dfd.resolve(arguments[0]);
+  }).fail(
+    function(jqXHR, textStatus, errorThrown){
+      return 'fail';
+    }
+  );
+
+  return dfd.promise();
+}
+
+//Replaceにアレイを指定して連続で変換する関数。\tで区切り、null指定で""と置き換えられる
+function forreplace(strings,rules) {
+  for (var i = 0; i <= rules.length - 1; i++) {
+    var pam = rules[i].split(/\t/);
+    if (pam[1] == 'null') { 
+      strings = strings.replace(new RegExp(pam[0],"g"),"");
+    } else {
+      strings = strings.replace(new RegExp(pam[0],"g"),pam[1]);
+    }
+  }
+  return strings;
+}
+
+//描画するHTMLを生成する関数。add=追加(1)/書き換え(0) count=追加する位置 question=コード／ドキュメント名 mode=以下に示すメニューのモード
+//mode = 1: Code	
+//mode = 2: Document
+//mode = 3: Change Repository [contenteditable]
+//mode = 4: Return GUESS
+//mode = 5: Apply Repository [contenteditable]
+//mode = 6: Back
+function htmlcall(add,count,question,mode) {
+  var rethtml = '';
+  var color = '#4DB74A;';
+  
+  if (add > 0) {
+    if (mode == 3) { color = '#8DF77A;'; }
+    else if (mode == 5) { color = '#EDF7AA;'; }
+
+    rethtml = rethtml + '<style type="text/css"> .menu' + count + ' { margin: 0; display: flex; width: 33%; } </style>\r' + 
+                        '<li id="code' + count + '" style="background-color:' + color + '">';
+  }
+
+  if (mode == 5 || mode == 6) {
+    rethtml = rethtml + '<h4 class="menu'+ count +'"><li id="Del' + count + '">[DEL]</li>';
+  } else {
+    rethtml = rethtml + '<h4 class="menu'+ count +'"><li id="Run' + count + '">[Run]</li>&nbsp;<li id="Del' + count + '">[DEL]</li>&nbsp;';
+  }
+
+  switch (mode){
+    case 1:
+      rethtml = rethtml + '<li id="Cod' + count + '">[Code]</li></h4>\r';
+      break;
+    case 2:
+      rethtml = rethtml + '<li id="Doc' + count + '">[Document]</li></h4>\r';
+      break;
+    case 3:
+      rethtml = rethtml + '<li id="Chg' + count + '">[Change]</li><li id="Repo' + count + '">[Repository]</li></h4>\r';
+      break;
+    case 4:
+      rethtml = rethtml + '<li id="Ret' + count + '">[Return]</li><li id="Gues' + count + '">[GUESS]</li></h4>\r';
+      break;
+    case 5:
+      rethtml = rethtml +  '<li id="Apl' + count + '">[Apply]</li><li id="Repo' + count + '">[Repository]</li></h4>\r';
+      break;
+    case 6:
+      rethtml = rethtml +  '<li id="Bak' + count + '">[Back]</li></h4>\r';
+      break;
+  }
+
+  rethtml = rethtml + '<h3 class="question' + count + '">' + question + ' #' + count + '</h3>\r';
+
+  if (mode == 3 || mode == 5) {
+    rethtml = rethtml + '<class contenteditable="true">';
+  }
+
+  return rethtml;
+}
+
+//HTMLを与えるとアレイに格納された置き換えパラメータで変換したものを返す関数。コード編
+function codechange(data,cod) {
+  var strings = '';
+  var boxs = data[1].split(/,/);
+
+  for (var i = 0 ; i < boxs[0] ; i++ ) {
+    var texta = $("#" + cod + boxs[i + 1]).val();
+    if (texta.length == 0) {
+      return 'fail';
+    }
+  }
+
+  for (var i = 2 ; i < data.length; i++) {
+    if (data[i].length > 1) {
+      arrs = data[i].replace(/ /g, "&nbsp;");
+      var texta = '';
+      var textb = '';
+      for (var r = 0 ; r < boxs[0] ; r++ ) {
+        texta = $("#" + cod + boxs[r + 1]).val();
+        textb = textb + texta + ',';
+        arrs = arrs.replace('##' + boxs[r + 1] + '##', '<b>' + texta + '</b>');
+      }
+      strings = strings + '<p id=' + textb + ' class="answer'+ cod + '" style="display: none;">' + arrs + '</p>\r';
+    }
+  }
+  return strings;
+}
+
+//HTMLを与えるとアレイに格納された置き換えパラメータで変換したものを返す関数。ドキュメント編
+function customchange(data,cod) {
+  var strings = '';
+  var p = 0;
+  var r = 0;
+  var texta = $('#code' + cod).html();
+  var rule = [];
+  var htmls = [];
+  var regx = [];
+  rule.push('<\/p>\t\r');
+  rule.push('<\/h3>\t\r');
+  rule.push('<\/h4>\t\r');
+  rule.push('<br>\t\r');
+  var txt = forreplace(texta,rule).split(/\r\n|\r|\n/);
+
+  for (var i = 0 ; i < txt.length; i++) {
+    if (txt[i].indexOf('answer' + cod) > -1 && txt[i].length > 1) {
+      r++;
+      var textd = txt[i].replace(/<[^>]*>/g, "");
+      if (textd == '--') { 
+        p = r;
+      } else {
+        var textt = textd.replace(/^ /g, "");
+        if (p > 0) {
+          htmls.push(textt);
+        } else {
+          regx.push(textt);
+        }
+      }
+    }
+  }
+  if (p == 0) {
+    htmls = regx;
+  }
+
+  for (var i = 0 ; i < htmls.length; i++) {
+    if (htmls[i].length > 1) {
+      var arrs = htmls[i].replace(/ /g, "&nbsp;");
+      if (p == 0) {
+        strings = strings + '<p id="," class="answer'+ cod + '" style="display: none;">' + arrs + '</p>\r';
+      } else {
+        var texf = '';
+        for (var y = 0 ; y < data.length; y++ ) {
+          var apz = data[y].split(/:/);
+          if (arrs.indexOf('##' + apz[0] + '##') > -1) {
+            arrs = arrs.replace('##' + apz[0] + '##', '<u>' + apz[1] + '</u>');
+          }
+        }
+
+        for (var rr = 0 ; rr < p - 1; rr++ ) {
+          var arz = regx[rr].split(/:/);
+          arrs = arrs.replace('##' + arz[0] + '##', '<b>' + arz[1] + '</b>');
+          texf = texf + arz[0] + ',' + arz[1] + ',';
+        }
+        strings = strings + '<p id="' + texf + '" class="answer'+ cod + '" style="display: none;">' + arrs + '</p>\r';
+      }
+    }
+  }
+  return strings;
+}
+
+//HTMLに変換かける関数。一覧を取得→書き換えの順で動く。グローバルワードから優先的に書き換える
+$(document).on("click","[id^=Cod],[id^=Doc],[id^=Chg],[id^=Ret],[id^=Apl],[id^=Bak]", function() {
+  var id = $(this).attr("id");
+  var username = $("#username").val();
+  
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (ret.indexOf('fail') > -1) {
+          alert('UserName ' + username + ' not Found');
+          $("#username").val("");
+          return;
+        }
+        var ope = id.substr(0,3);
+        var cod = id.slice(3);
+        var cmd = '';
+        var lname = $('.question' + cod).text();
+        var cname = lname.split(/ #/)[0];
+        var cnum = 0;
+
+        switch (ope){
+          case 'Cod':
+            cmd = FQDN + '?index=public';
+            break;
+          case 'Doc':
+            cmd = FQDN + '?index=public';
+            break;
+          case 'Chg':
+            cmd = FQDN + '?index=customc=' + username;
+            break;
+          case 'Ret':
+            cmd = FQDN + '?index=customc=' + username;
+            break;
+          case 'Apl':
+            cmd = FQDN + '?index=customd=' + username;
+            break;
+          case 'Bak':
+            cmd = FQDN + '?index=customd=' + username;
+            break;
+        }
+
+        secajax(cmd)
+        .then(
+          function(ret) {
+            if (ret[0] == 'fail') { return; }
+
+              indexs = ret[0].split(/\r\n|\r|\n/);
+              for (var i = 0 ; i < indexs.length; i++) {
+                if (indexs[i].length > 2) {
+                  var arrr = indexs[i].split(/\t/);
+                  if (cname == arrr[1]) {
+                    cnum = arrr[0];
+                  }
+                }
+              }
+
+              switch (ope){
+                case 'Cod':
+                  cmd = FQDN + '?pans=' + cnum;
+                  break;
+                case 'Doc':
+                  cmd = FQDN + '?pcode=' + cnum;
+                  break;
+                case 'Chg':
+                  cmd = FQDN + '?gwordlist=' + username + '=cod';
+                  break;
+                case 'Ret':
+                  cmd = FQDN + '?gwordlist=' + username + '=cod';
+                  break;
+                case 'Apl':
+                  cmd = FQDN + '?gwordlist=' + username + '=doc';
+                  break;
+                case 'Bak':
+                  cmd = FQDN + '?gwordlist=' + username + '=doc';
+                  break;
+              }
+
+              secajax(cmd)
+              .then(
+                function(rett) {
+                  if (rett[0] == 'fail') { return; }
+
+                  var htmla = '';
+                  var htmlm = '';
+                  var data = rett[0].split(/\r\n|\r|\n/);
+                  var boxs = data[1].split(/,/);
+
+                  switch (ope){
+                    case 'Cod':
+                      htmlm = htmlcall(0,cod,cname,2);
+
+                      htmla = codechange(data,cod);
+                      if (htmla == 'fail') {
+                        alert('Empty Parameter! Convert Fail!');
+                        return;
+                      }
+
+                      break;
+                    case 'Doc':
+                      htmlm = htmlcall(0,cod,cname,1);
+                      
+                      var texta = $('.answer' + cod).attr("id");
+                      var textb = texta.split(/,/);
+                      for (var i = 0 ; i < boxs[0] ; i++ ) {
+                        htmla = htmla + '<p class="answer'+ cod + '">' + boxs[i + 1] + ': <input type="text" id="' + cod + boxs[i + 1] + '" value="' + textb[i] + '"></p>\r';
+                      }
+                      for (var i = 2 ; i < data.length; i++) {
+                        if (data[i].length > 1) {
+                          htmla = htmla + '<p class="answer'+ cod + '" " style="display: none;">' + data[i] + '</p>\r';
+                        }
+                      }
+                      break;
+                    case 'Chg':
+                    case 'Apl':
+                      if (ope == 'Chg') { htmlm = htmlcall(0,cod,cname,4); }
+                      else { htmlm = htmlcall(0,cod,cname,6); }
+
+                      htmla = customchange(data,cod);
+
+                      break;
+                    case 'Ret':
+                    case 'Bak':
+                      if (ope == 'Ret') { htmlm = htmlcall(0,cod,cname,3); }
+                      else { htmlm = htmlcall(0,cod,cname,5); }
+
+                      var texta = $('#code' + cod).html();
+                      var rule = [];
+                      rule.push('<\/p>\t\r');
+                      rule.push('<[^>]*>\t');
+                      rule.push('&nbsp;\t ');
+                      var arr = forreplace(texta,rule).split(/\r\n|\r|\n/);
+
+                      texta = $('.answer' + cod).attr("id");
+                      var mode = 0;
+                      if (texta.length > 1) {
+                        var textb = texta.split(/,/);
+                        for (var i = 0 ; i < textb.length - 1; i = i + 2 ) {
+                          htmla = htmla + '<p class="answer'+ cod + '" " style="display: none;">' + textb[i] + ':' + textb[i + 1] + '</p>\r';
+                          mode++;
+                        }
+                      }
+                      if (mode > 0) {
+                        htmla = htmla + '<p class="answer'+ cod + '" " style="display: none;">--</p>\r';
+                      }
+
+                      for (var i = 0 ; i < arr.length; i++) {
+                        if (mode > 0) {
+                          for (var r = 0 ; r < textb.length - 1; r = r + 2 ) {
+                            for (var y = 0 ; y < data.length; y++ ) {
+                              var apz = data[y].split(/:/);
+                              arr[i] = arr[i].replace(apz[1],'##' + apz[0] + '##');
+                            }
+                            arr[i] = arr[i].replace(textb[r + 1],'##' + textb[r] + '##');
+                          }
+                        }
+                        if (arr[i].length > 0) {
+                          if (arr[i].indexOf('[Run]') == -1 && arr[i].indexOf(cname + ' #') == -1 && arr[i].indexOf('[DEL]') == -1) {
+                            htmla = htmla + '<p class="answer'+ cod + '" " style="display: none;">' + arr[i] + '</p>\r';
+                          }
+                        }
+                      }
+                      break;
+                  }
+
+                  $(document).ready(function(){
+                    $('.answer' + cod).remove();
+                    $('.question' + cod).remove();
+                    $('.menu' + cod).remove();
+                    $('#code' + cod).prepend(htmlm + htmla);
+                  });
+            });
+          }
+        );
+    });
+  }
+});
+
+//リポジトリのコミット関数。コードをPOSTで投げる。
+$(document).on("click","[id^=Repo]", function() {
+  var id = $(this).attr("id");
+  var username = $("#username").val();
+  
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (ret.indexOf('fail') > -1) {
+          alert('UserName ' + username + ' not Found');
+          $("#username").val("");
+          return;
+        }
+        var ope = id.substr(0,4);
+        var cod = id.slice(4);
+        var cmd = '';
+        var lname = $('.question' + cod).text();
+        var cname = lname.split(/ #/)[0];
+
+        var texta = $('#code' + cod).html();
+        var rule = [];
+        rule.push('<\/p>\t\r');
+        rule.push('<\/h3>\t\r');
+        rule.push('<\/h4>\t\r');
+        rule.push('<br>\t\r');
+        var textb = forreplace(texta,rule);
+        var txt = textb.replace(/<[^>]*>/g, "").split(/\r\n|\r|\n/);
+
+        var strs = '';
+        for (var i = 0 ; i < txt.length; i++) {
+          if (txt[i].length > 0) {
+            if (txt[i].indexOf('[Run]') == -1 && txt[i].indexOf(cname + ' #') == -1 && txt[i].indexOf('[DEL]') == -1 && txt[i].indexOf('[ok?]') == -1) {
+              if (i == 2) {
+                strs = strs + txt[i].replace(/^ .*/g, "") + '\r';
+              } else {
+                strs = strs + txt[i] + '\r';
+              }
+            }
+          }
+        }
+
+        var typa = 'cod';
+        if (textb.indexOf('[Apply]') > -1) {
+          var typa = 'doc';
+        }
+        
+        $.post(FQDN, {ctrl: 'repo',user: username,typa: typa,typb: cname,code: strs},
+          function(data){
+            alert(cname + ' ' + data);
+          }
+        );
+    });
+  }
+});
+
+//リポジトリ画面の描画関数。バックエンドからの返信を表示する。
+$("#repolist").click(function() {
+  var username = $("#username").val();
+  
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (switch_flg == 3) {
+          alert("Public Mode!");
+          return;
+        } else {
+          var buttons = [
+            {
+              text: "Close",
+              click: function () { $(this).dialog('close'); }
+            }
+          ];
+          var codez = '<div class="tab-content">\r' +
+                      '  <input type="radio" id="tab1" name="tab" checked><label for="tab1">Code</label><input type="radio" id="tab2" name="tab"><label for="tab2">Global Word</label>\r' +
+                      '  <div class="tab-box">\r' +
+                      '    <div id="tabView1">[Loading..]</div>\r' +
+                      '    <div id="tabView2">[Loading..]</div>\r' +
+                      '  </div>\r' +
+                      '</div>\r';
+          showDialog("Repository", codez, buttons);
+          var swflag = 'cod';
+          if (switch_flg == 2) {
+            swflag = 'doc';
+          }
+          secajax(FQDN + "?repolist=" + username + '=' + swflag).then(
+            function(ret) {
+              if (ret[0] == 'fail') { return; }
+              var htmla = '';
+              var arr = ret[0].split(/\r\n|\r|\n/);
+              var ids = '';
+              var p = 1;
+              for (var i = 0 ; i < arr.length ; i++ ) {
+                if (arr[i].length > 0) {
+                  if (arr[i].indexOf('<span class') > -1) {
+                    ids = (arr[i].split(/"/))[1]
+                    htmla = htmla + '<h4 class="codes' + p + '"><li id="ren:' + ids + '">[Rename]</li><li id="del:' + ids + '" >[Del]</li>' + arr[i] + '</h4>';
+                    p++;
+                  } else {
+                    idm = (ids.split(/:/))[0] + ':' + arr[i]
+                    htmla = htmla + '<h4>&nbsp;&nbsp;<li id="com:' + idm + '">[Commit]</li><li id="del:' + idm + '" >[Del]</li>&nbsp;' + arr[i] + '</h4>';
+                  }
+                }
+              }
+              $('#tabView1').html(htmla);
+              mclose();
+            });
+        }
+    });
+  }
+});
+
+//リポジトリの旧コードをコミットしてマスターに格上げする関数。
+$(document).on("click", "[id^=com]", function () {
+  id = $(this).attr("id");
+  var cod = id.replace(/com:/g, "");
+  var codz = cod.replace(/:/g, ".");
+  var username = $("#username").val();
+  var swflag = 'cod';
+  if (switch_flg == 2) {
+    swflag = 'doc';
+  }
+  $.get(FQDN + "?comcode=" + username + '=' + swflag + '=' + codz , function(data){
+    alert(data);
+    $('.ui-dialog').remove();
+  });
+});
+
+//リポジトリメニュー用のDelete関数。こちらも[ok?]にするだけ
+$(document).on("click", "[id^=del]", function () {
+  id = $(this).attr("id");
+  var cod = id.replace(/del:/g, "");
+  $(this).html('<li id="okdel:' + cod + '">[ok?]</li>');
+});
+
+//リポジトリメニュー用のDelete関数。[ok?]であった場合にメニューから消してバックエンドに消して欲しいものの情報を送る
+$(document).on("click", "[id^=okdel]", function () {
+  id = $(this).attr("id");
+  var cod = id.replace(/okdel:/g, "");
+  var codz = cod.replace(/:/g, ".");
+  var username = $("#username").val();
+  var swflag = 'cod';
+  if (switch_flg == 2) {
+    swflag = 'doc';
+  }
+  $.get(FQDN + "?delcode=" + username + '=' + swflag + '=' + codz , function(data){
+    alert(data);
+    $('.ui-dialog').remove();
+  });
+});
+
+//リポジトリをコード／ドキュメント、グローバルワードにタブ切り替えするための関数
+$(document).on("click", "[id^=tab2]", function () {
+  var username = $("#username").val();
+  var swflag = 'cod';
+  if (switch_flg == 2) {
+    swflag = 'doc';
+  }
+  secajax(FQDN + "?gwordlist=" + username + '=' + swflag).then(
+    function(data) {
+      var htmla = '';
+      glist = 0;
+      var arr = data[0].split(/\r\n|\r|\n/);
+      htmla = htmla + '<h4><li id="wadd" >[Add]</li><li id="wcom" >[Commit]</li></h4><hr>';
+      for (var i = 0 ; i < arr.length ; i++ ) {
+        if (arr[i].length > 0) {
+          var param = arr[i].split(/:/);
+          htmla = htmla + '<h4 class="words' + glist + '"><li id="wdel' + glist + '" >[DEL]</li>&nbsp;<li><input type="text" id="wkey' + glist + '" value="' + param[0] + '"></li><li><input type="text" id="wparam' + glist + '" value="' + param[1] + '"></li></h4>';
+          glist++;
+        }
+      }
+      $(document).ready(function(){
+        $('#tabView2').html(htmla);
+      });
+    });
+});
+
+//グローバルワード用のコミット関数。POSTするだけ。
+$(document).on("click", "[id^=wcom]", function () {
+  var docs = '';
+  var p = 0;
+  for (var i = 0 ; i < glist ; i++ ) {
+    texta = $("#wkey" + i).val();
+    if (texta != undefined) {
+      textb = $("#wparam" + i).val();
+      if (texta.length == 0 || textb.length == 0) {
+        p = 1;
+      } else {
+        docs = docs + texta + ':' + textb + '\r';
+      }
+    }
+  }
+  if (p == 1) {
+    alert('Empty value exits!');
+    return;
+  } else {
+    var typa = 'cod';
+    if (switch_flg == 2) {
+      typa = 'doc';
+    }
+    var username = $("#username").val();
+    $.post(FQDN, {ctrl: 'gcom',user: username,typa: typa,code: docs}, 
+      function(data){
+        alert(data);
+	    $('.ui-dialog').remove();
+      }
+    );
+  }
+});
+
+//リポジトリの名前変更用関数。名前を設定し、反映する時に使用する
+$(document).on("click", "[id^=apl]", function () {
+  id = $(this).attr("id");
+  var cod = id.split(/:/);
+  texta = $("#rname" + cod[1]).val();
+  var typa = 'cod';
+  if (switch_flg == 2) {
+    typa = 'doc';
+  }
+  var username = $("#username").val();
+  $.post(FQDN, {ctrl: 'comren',user: username,typa: typa,typb: cod[2],code: texta},
+    function(data){
+      alert(data);
+      $('.ui-dialog').remove();
+    }
+  );
+});
+
+//グローバルワードの追加。一列追加しているだけ。
+$(document).on("click", "[id^=wadd]", function () {
+  htmla = '<h4 class="words' + glist + '"><li id="wdel' + glist + '" >[DEL]</li>&nbsp;<li><input type="text" id="wkey' + glist + '" ></li><li><input type="text" id="wparam' + glist + '" ></li></h4>';
+  $('#tabView2').append(htmla);
+  glist++;
+});
+
+//グローバルワードの削除。一列消去しているだけ。
+$(document).on("click", "[id^=wdel]", function () {
+  id = $(this).attr("id");
+  var cod = id.replace(/wdel/g, "");
+  $('.words' + cod).remove();
+});
+
+//リポジトリの名前変更用関数。名前をテキストフィールドに表示している
+$(document).on("click", "[id^=ren]", function () {
+  id = $(this).attr("id");
+  var cod = id.replace(/ren:/g, "");
+  var codz = cod.replace(/.0/g, "");
+  var texta = $('.codes' + codz).text();
+  var textb = texta.replace(/\[Rename\]\[Del\]/g, "");
+  htmla = '<li id="apl:' + codz + ':' + textb + '">[Apply]</li><li><input type="text" id="rname' + codz + '" value="' + textb + '" ></li>';
+  $('.codes' + codz).html(htmla);
+});
+
+//ダイアログ描写関数
+function showDialog(title, message, buttons) {
+  var html_dialog = '<div>' + message + '</div>'; 
+  $(html_dialog).dialog({
+      dialogClass: "diags",
+      title:       title,
+      buttons:     buttons,
+      minWidth:    800,
+      close:   function() { $(this).remove(); }
+  });
+}
+
+//Localstorageへの自動保存の実体関数。実際に保存するのはこの関数
+function hyoji() {
+  $(document).ready(function(){
+    var texta = $('ul.faq').html();
+    var username = $("#username").val();
+    var ext = counts + ':' + username + '\r';
+    var txt = texta.split(/\r\n|\r|\n/);
+    for (var i = 0 ; i < txt.length; i++) {
+      if (txt[i].indexOf('input type="text"') > -1) {
+        var parama = txt[i].split(/id=/)[1];
+        var paramb = parama.split(/"/)[1];
+        var params = $("#" + paramb).val();
+        var texta = txt[i].replace(paramb, paramb + '" value="' + params);
+        ext = ext + texta + '\n';
+      } else {
+        ext = ext + txt[i] + '\n';
+      }
+    }
+    window.localStorage.setItem('autosave', ext);
+
+    var dToday = new Date(); 
+    var hour = dToday.getHours();
+    var minute = dToday.getMinutes();
+    var second = dToday.getSeconds();
+    $('#lastsavetime').text(hour + ':' + minute + ':' + second);
+  });
+}
+
+//新規コード追加用メニュー。ダイアログを開き、入力待ちになる。
+$(document).on("click","[id^=new]", function() {
+  var username = $("#username").val();
+
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (switch_flg == 3) {
+          alert("Public Mode!");
+          return;
+        } 
+
+        var strs = 'Code';
+        if (switch_flg == 2) {
+          strs = 'Document';
+        }
+
+        var buttons = [
+          {
+          text: "Close",
+          click: function () { $(this).dialog('close'); }
+          }
+        ];
+        var codez = '<p>Input new name and Apply Enter</p>\r' +
+                   '<input type="text" id="codename" onkeypress="enter(event.keyCode);" />\r';
+        showDialog("New " + strs + " Add", codez, buttons);
+        mclose();
+    });
+  }
+});
+
+//新規コード追加用メニュー。Enterが押されたらバックエンドに追加する名前を投げる
+function enter(code) {
+  if(13 === code) {
+    var texta = $("#codename").val();
+    if (texta.length == 0) {
+      alert("Title Empty!");
+    } else {
+      var urls = '';
+      if (switch_flg == 1) {
+        urls = 'cnew';
+      } else { 
+        urls = 'dnew';
+      }
+      var uname = $("#username").val();
+      texta = texta.replace(/ /g, "");
+      $.get(FQDN + "?" + urls + "=" + texta + "=" + uname, function(data) {
+        alert(data);
+
+        if (data.indexOf(texta) > -1) {
+          $('.ui-dialog').remove();
+        }
+      });
+    }
+  }
+}
+
+//インポート用関数。日本語→ドキュメント、英語→コードの判定で全再描画する。
+$('#imports').change(
+  function (evt) {
+    var username = $("#username").val();
+
+    if (username.length > 1) {
+      auth(username).then(
+        function(ret) {
+          if (switch_flg == 3) {
+            alert("Public Mode!");
+            $('#imports').val('');
+            return;
+          } 
+
+          var file = evt.target.files;
+          var reader = new FileReader();
+          var htmls = '';
+          reader.readAsText(file[0]);
+          reader.onload = function(ev){
+            counts = 1;
+            var txt = reader.result.split(/\r\n|\r|\n/);
+            var htmla = '';
+            var lmode = 1;
+            $(document).ready(function(){
+              $('.faq').html('');
+            });
+
+            for (var i = 1 ; i < txt.length; i++) {
+              if (txt[i].length > 1) {
+                if(htmla.length == 0) {
+                  guessLanguage.info(txt[i], function(languageInfo) {
+                    langs = languageInfo[0];
+                    if (langs == 'ja') {
+                      htmla = htmlcall(1,counts,'Document',5) + 
+                              '<p class="answer'+ counts + '" " style="display: none;">' + txt[i] + '</p>\r';
+                    } else {
+                      htmla = htmlcall(1,counts,'Code',3) + 
+                              '<p class="answer'+ counts + '" " style="display: none;">' + txt[i] + '</p>\r';
+                    }
+                  });
+                  } else {
+                    htmla = htmla + '<p class="answer'+ counts + '" " style="display: none;">' + txt[i] + '</p>\r';
+                  }
+               } else {
+                 $(document).ready(function(){
+                   htmla = htmla + '<br></class>'
+                   $('.faq').append(htmla);
+                   htmla = '';
+                   counts++;
+                });
+              }
+            }
+          }
+          $('#imports').val('');
+          mclose();
+      });
+    }
+  }
+);
+
+//コード類推用関数。選択されたCustomコードをバックエンドに投げ込み、バックエンドから帰ってきた結果を描写する。
+$(document).on("click","[id^=Gues]", function() {
+  var id = $(this).attr("id");
+  var username = $("#username").val();
+
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (ret.indexOf('fail') > -1) {
+          alert('UserName ' + username + ' not Found');
+          $("#username").val("");
+          return;
+        }
+        var ope = id.substr(0,4);
+        var cod = id.slice(4);
+        var cmd = '';
+        var lname = $('.question' + cod).text();
+        var cname = lname.split(/ #/)[0];
+
+        var params = [];
+
+        var texta = $('#code' + cod).html();
+        var rule = [];
+        rule.push('<\/p>\t\r');
+        rule.push('<\/h3>\t\r');
+        rule.push('<\/h4>\t\r');
+        rule.push('<br>\t\r');
+        rule.push('<\/style>\t\r');
+        var textb = forreplace(texta,rule);
+        var txt = textb.replace(/<[^>]*>/g, "").split(/\r\n|\r|\n/);
+        var strs = '';
+
+        for (var i = 0 ; i < txt.length; i++) {
+          if (txt[i].length > 0) {
+            if (txt[i].indexOf('[Run]') == -1 && txt[i].indexOf(lname) == -1 && txt[i].indexOf('[DEL]') == -1 && txt[i].indexOf('[ok?]') == -1) {
+              txt[i] = txt[i].replace(/&nbsp;/g, " ");
+              if (i == 2) {
+                strs = strs + txt[i].replace(/^ .*/g, "") + '\n';
+              } else {
+                strs = strs + txt[i] + '\n';
+              }
+            }
+          }
+        }
+
+        var typa = 'cod';
+        if (textb.indexOf('[Apply]') > -1) {
+          var typa = 'doc';
+        }
+
+        $.post(FQDN, {ctrl: 'guess',user: username,code: strs},
+          function(data){
+            var codez = ''
+            var p = 0;
+            var txt = data.split(/\r\n|\r|\n/);
+            for (var i = 0; i < txt.length; i++) {
+              if (txt[i].indexOf('<h3 class') > -1) {
+                codez = codez + txt[i];
+                p++;
+              } else {
+                if (p > 0) {
+                  codez = codez + '<h4 class="danswer">' + txt[i].replace(/ /g, "&nbsp;") + '</h4>\r';
+                }
+              }
+            }
+            var buttons = [
+              {
+                  text: "Close",
+                  click: function () { $(this).dialog('close'); }
+              }
+            ];
+            showDialog("Guess Result", codez, buttons);
+          }
+        );
+
+    });
+  }
+});
+
+//歯抜けになった順番号を1～並べなおしする関数。HTML内のIDタグについても書き直し。[ok?]は[DEL]に戻る。
+function renumber(strings) {
+  var rule = [];
+  rule.push('<\/p>\t<\/p>\r');
+  rule.push('<\/h3>\t<\/h3>\r');
+  rule.push('<\/h4>\t<\/h4>\r');
+  rule.push('<br>\t<br>\r');
+  rule.push('<\/style>\t<\/style>\r');
+  var txt = forreplace(strings,rule).split(/\r\n|\r|\n/);
+
+  for (var i = 0 ; i < txt.length; i++) {
+    if (txt[i].indexOf('input type="text"') > -1) {
+      var parama = txt[i].split(/id=/)[1];
+      var paramb = parama.split(/"/)[1];
+      var params = $("#" + paramb).val();
+      txt[i] = txt[i].replace(paramb, paramb + '" value="' + params) + '\r';
+    } else {
+      txt[i] = txt[i] + '\r';
+    }
+  }
+  var maxs = counts;
+  var htmla = '';
+  counts = 0;
+  for (var i = 0 ; i < txt.length; i++) {
+    if (txt[i].indexOf('[DEL]') > -1 || txt[i].indexOf('[ok?]') > -1) {
+      counts++;
+      for (var r = 0 ; r < maxs + 1; r++) {
+        if (txt[i].indexOf('id="okDel' + r) > -1) {
+          txt[i] = txt[i].replace('<li id="Del' + r + '"><li id="okDel' + r + '">[ok?]</li></li>', '<li id="Del' + r + '">[DEL]</li>');
+        }
+      }
+      for (var r = 0 ; r < maxs + 1; r++) {
+        txt[i] = txt[i].replace('id=\"code' + r, 'id=\"code' + counts);
+        txt[i] = txt[i].replace('class=\"menu' + r, 'class=\"menu' + counts);
+        txt[i] = txt[i].replace('id=\"Del' + r, 'id=\"Del' + counts);
+        txt[i] = txt[i].replace('id=\"Run' + r, 'id=\"Run' + counts);
+        txt[i] = txt[i].replace('id=\"Chg' + r, 'id=\"Chg' + counts);
+        txt[i] = txt[i].replace('id=\"Repo' + r, 'id=\"Repo' + counts);
+        txt[i] = txt[i].replace('id=\"Apl' + r, 'id=\"Apl' + counts);
+        txt[i] = txt[i].replace('id=\"Cod' + r, 'id=\"Cod' + counts);
+        txt[i] = txt[i].replace('id=\"Gues' + r, 'id=\"Gues' + counts);
+        txt[i] = txt[i].replace('id=\"Ret' + r, 'id=\"Ret' + counts);
+      }
+    }
+    if (txt[i].indexOf('class=\"question') > -1) {
+      for (var r = 0 ; r < maxs + 1; r++) {
+            txt[i] = txt[i].replace('class=\"question' + r, 'class=\"question' + counts);
+      }
+      var texta = txt[i].split(/#/);
+      txt[i] = texta[0] + '#' + counts + '</h3>';
+    }
+    if (txt[i].indexOf('input type="text"') > -1 ) {
+      for (var r = 0 ; r < maxs + 1; r++) {
+        txt[i] = txt[i].replace('id=\"' + r, 'id=\"' + counts);
+      }
+    }
+    if (txt[i].indexOf('class=\"answer') > -1) {
+      for (var r = 0 ; r < maxs + 1; r++) {
+        txt[i] = txt[i].replace('class=\"answer' + r, 'class=\"answer' + counts);
+      }
+    }
+    htmla = htmla + txt[i];
+  }
+
+  return htmla;
+}
+
+//歯抜けになった順番号を1～並べなおしする関数を呼び出すボタン。
+$(document).on("click","[id^=rnum]", function() {
+  var texta = $('ul.faq').html();
+  var htmla = renumber(texta);
+  $('.faq').html(htmla);
+});
+
+//コード単体をテスト実行する関数。コードに変換をかけてバックエンドに投げ込んでいるのみ
+$(document).on("click","[id^=Run]", function() {
+  var id = $(this).attr("id");
+  var username = $("#username").val();
+
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (ret.indexOf('fail') > -1) {
+          alert('UserName ' + username + ' not Found');
+          $("#username").val("");
+          return;
+        }
+        var ope = id.substr(0,3);
+        var cod = id.slice(3);
+        var cmd = '';
+        var lname = $('.question' + cod).text();
+        var cname = lname.split(/ #/)[0];
+
+        secajax(FQDN + "?gwordlist=" + username + '=cod').then(
+          function(ret) {
+           if (ret[0] == 'fail') { return; }
+           gwordc = ret[0].split(/\r\n|\r|\n/);
+
+           var texta = $('#code' + cod).html();
+           var rule = [];
+           rule.push('<\/p>\t\r');
+           rule.push('<\/h3>\t\r');
+           rule.push('<\/h4>\t\r');
+           rule.push('<br>\t\r');
+           rule.push('<\/style>\t\r');
+           var textb = forreplace(texta,rule);
+           var strs = '';
+           var txt = '';
+           var textc = textb.replace(/.*input type.*/g, "");
+           txt = textc.replace(/<[^>]*>/g, "").split(/\r\n|\r|\n/);
+
+           var params = [];
+           var rr = 0;
+
+           if (textb.indexOf('[Code]') > -1) {
+             var txtn = textb.split(/\r\n|\r|\n/);
+             for (var i = 0 ; i < txtn.length; i++) {
+               if (txtn[i].indexOf('input type="text"') > -1) {
+                 var parama = txtn[i].split(/id=/)[1];
+                 var paramb = parama.split(/"/)[1];
+                 var paramc = $("#" + paramb).val();
+                 if (paramc.length == 0) {
+                   alert('Empty Parameter! Run Fail!');
+                   return;
+                 }
+                 params.push('##' + paramb.replace(cod,"") + '##\t' + paramc);
+               }
+             }
+           } else if (textb.indexOf('[Change]') > -1 && textb.indexOf('>--') > -1) {
+             for (var p = 0 ; p < gwordc.length; p++) {
+               if (gwordc[p].length > 1) {
+                 var pam = gwordc[p].split(/:/);
+                 params.push('##' + pam[0] + '##\t' + pam[1]);
+               }
+             }
+
+             var txtn = textb.split(/\r\n|\r|\n/);
+             for (var i = 0 ; i < txt.length; i++) {
+               if (txt[i].indexOf('[Run]') == -1 && txt[i].indexOf(lname) == -1 && txt[i].indexOf('[DEL]') == -1 && txt[i].indexOf('[ok?]') == -1) {
+                 if (txt[i].indexOf('--') > -1) {
+                   rr = i + 1;
+                   i = txt.length + 1;
+                 } else {
+                   var parama = txt[i].split(/:/);
+                   params.push('##' + parama[0] + '##\t' + parama[1]);
+                 }
+               }
+             }
+           }
+
+           for (var i = rr ; i < txt.length; i++) {
+             if (txt[i].length > 0) {
+               if (txt[i].indexOf('[Run]') == -1 && txt[i].indexOf(lname) == -1 && txt[i].indexOf('[DEL]') == -1 && txt[i].indexOf('[ok?]') == -1) {
+                 txt[i] = txt[i].replace(/&nbsp;/g, " ");
+                 txt[i] = forreplace(txt[i],params);
+                 if (i == 2) {
+                   strs = strs + txt[i].replace(/^ .*/g, "") + '\n';
+                 } else {
+                   strs = strs + txt[i] + '\n';
+                 }
+               }
+             }
+           }
+           if (textb.indexOf('[Apply]') > -1) {
+             var typa = 'doc';
+           }
+           $.post(FQDN, {ctrl: 'run',user: username,code: strs},
+             function(data){
+               var codez = ''
+               var p = 0;
+               if (data.length > 10) {
+                 var txt = data.split(/\r\n|\r|\n/);
+                 for (var i = 0; i < txt.length; i++) {
+                   if (txt[i].indexOf('<h3 class') > -1) {
+                     codez = codez + txt[i];
+                     p++;
+                   } else {
+                     if (p > 0) {
+                       codez = codez + '<h4 class="danswer">' + txt[i].replace(/ /g, "&nbsp;") + '</h4>\r';
+                     }
+                   }
+                 }
+               } else {
+                 codez = '<h4 class="danswer">Run Error!</h4>\r';
+               }
+           
+               var buttons = [
+                 {
+                     text: "Close",
+                     click: function () { $(this).dialog('close'); }
+                 }
+               ];
+               showDialog("Result", codez, buttons);
+             }
+           );
+        });
+    });
+  }
+});
+
+//ファイル保存の関数。並べなおししてから保存する
+$("#save").click(function() {
+  var username = $("#username").val();
+  
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (switch_flg == 3) {
+          alert("Public Mode!");
+          return;
+        } 
+        var now = new Date();
+        var yyyymmdd = now.getFullYear()+ '-' + ( "0"+( now.getMonth()+1 ) ).slice(-2)+
+          ( "0"+now.getDate() ).slice(-2)+ '-' + ( "0"+now.getHours() ).slice(-2)+
+          ( "0"+now.getMinutes() ).slice(-2)+ ( "0"+now.getSeconds() ).slice(-2);
+
+        var ext = counts + ':' + username + '\r';
+        var texta = $('ul.faq').html();
+        ext = ext + renumber(texta);
+        var blobData = new window.Blob([ext],{type:'text/plain'});
+        saveAs(blobData, yyyymmdd + '.txt');
+    });
+  }
+});
+
+//ファイルから読み込み関数。並べなおししてからロードする
+$('#loads').change(
+  function (evt) {
+  var username = $("#username").val();
+  
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (switch_flg == 3) {
+          alert("Public Mode!");
+          $("#loads").val('');
+          return;
+        } 
+
+        var file = evt.target.files;
+        var reader = new FileReader();
+        var htmla = '';
+        reader.readAsText(file[0]);
+        reader.onload = function(evt){
+          counts = 0;
+          $(document).ready(function(){
+            var txt = reader.result.split(/\r\n|\r|\n/);
+            var params = txt[0].split(/:/);
+            if (username != params[1]) {
+              alert("Username not same!");
+              $("#loads").val('');
+              return;
+            }
+            counts = params[0];
+
+            for (var i = 1 ; i < txt.length; i++) {
+              if (txt[i].indexOf('<style type=') == -1) {
+                htmla = htmla + txt[i];
+              }
+            }
+            txt = renumber(htmla);
+            for (var i = 1 ; i < counts + 1; i++) {
+              txt = txt + '<style type="text/css"> .menu' + i + ' { margin: 0; display: flex; width: 33%; } </style>\r';
+            }
+
+            $('.faq').html(txt);
+            $("#loads").val('');
+            mclose();
+          });
+        }
+      });
+  } else { 
+    $("#loads").val('');
+    alert('User not Found! Do not Load!!');
+  }
+});
+
+//エクスポート関数。すべてのコードに変換とグローバルワードで置き換えをかけてからファイルで保存できる形式としてブラウザに渡す
+$("#export").click(function() {
+  var id = $(this).attr("id");
+  var username = $("#username").val();
+  var ext = '';
+
+  if (username.length > 1) {
+    auth(username).then(
+      function(ret) {
+        if (ret.indexOf('fail') > -1) {
+          alert('UserName ' + username + ' not Found');
+          $("#username").val("");
+          return;
+        }
+
+        secajax(FQDN + "?gwordlist=" + username + '=cod,' + FQDN + "?gwordlist=" + username + '=doc').then(
+          function(ret) {
+           if (ret[0] == 'fail') { return; }
+           gwordc = ret[0].split(/\r\n|\r|\n/);
+           gwordd = ret[1].split(/\r\n|\r|\n/);
+           var now = new Date();
+           var yyyymmdd = now.getFullYear()+ '-' +
+             ( "0"+( now.getMonth()+1 ) ).slice(-2)+
+             ( "0"+now.getDate() ).slice(-2)+ '-' +
+             ( "0"+now.getHours() ).slice(-2)+
+             ( "0"+now.getMinutes() ).slice(-2)+
+             ( "0"+now.getSeconds() ).slice(-2);
+
+           var texta = $('ul.faq').html();
+           var rule = [];
+           rule.push('<\/p>\t\r');
+           rule.push('<\/h3>\t\r');
+           rule.push('<\/h4>\t\r');
+           rule.push('<br>\t\r');
+           rule.push('<\/style>\t\r');
+           var textb = forreplace(texta,rule);
+           var txt = textb.split(/\r\n|\r|\n/);
+
+           var codz = [];
+           for (var i = 0 ; i < txt.length; i++) {
+             if (txt[i].length > 0) {
+               if (txt[i].indexOf('class=\"question') > -1) {
+                 txt[i] = txt[i].replace(/<[^>]*>/g, "");
+                 var rr = txt[i].split(/ #/)[1];
+                 codz.push(rr);
+               }
+             }
+           }
+
+           for (var count = 1 ; count < counts + 1; count++) {
+             var strs = '';
+             var lname = $('.question' + codz[count - 1]).text();
+
+             var texta = $('#code' + codz[count - 1]).html();
+             var rule = [];
+             rule.push('<\/p>\t\r');
+             rule.push('<\/h3>\t\r');
+             rule.push('<\/h4>\t\r');
+             rule.push('<br>\t\r');
+             rule.push('<\/style>\t\r');
+             var textb = forreplace(texta,rule);
+             var textc = textb.replace(/.*input type.*/g, "");
+             txt = textc.replace(/<[^>]*>/g, "").split(/\r\n|\r|\n/);
+
+             var params = [];
+             var rr = 0;
+
+             if (textb.indexOf('[Code]') > -1) {
+               var txtn = textb.split(/\r\n|\r|\n/);
+               for (var i = 0 ; i < txtn.length; i++) {
+                 if (txtn[i].indexOf('input type="text"') > -1) {
+                   var parama = txtn[i].split(/id=/)[1];
+                   var paramb = parama.split(/"/)[1];
+                   var paramc = $("#" + paramb).val();
+                   if (paramc.length == 0) {
+                     alert('Empty Parameter! Export Fail!');
+                     return;
+                   }
+                   params.push('##' + paramb.replace(codz[count - 1],"") + '##\t' + paramc);
+                 }
+               }
+             } else if (textb.indexOf('[Change]') > -1 && textb.indexOf('>--') > -1) {
+               for (var p = 0 ; p < gwordc.length; p++) {
+                 if (gwordc[p].length > 1) {
+                   var pam = gwordc[p].split(/:/);
+                   params.push('##' + pam[0] + '##\t' + pam[1]);
+                 }
+               }
+               var txtn = textb.split(/\r\n|\r|\n/);
+               for (var i = 0 ; i < txt.length; i++) {
+                 if (txt[i].indexOf('[Run]') == -1 && txt[i].indexOf(lname) == -1 && txt[i].indexOf('[DEL]') == -1 && txt[i].indexOf('[ok?]') == -1) {
+                   if (txt[i].indexOf('--') > -1) {
+                     rr = i + 1;
+                     i = txt.length + 1;
+                   } else {
+                     var parama = txt[i].split(/:/);
+                     params.push('##' + parama[0] + '##\t' + parama[1]);
+                   }
+                 }
+               }
+             } else if (textb.indexOf('[Apply]') > -1 && textb.indexOf('>--') > -1) {
+               for (var p = 0 ; p < gwordd.length; p++) {
+                 if (gwordd[p].length > 1) {
+                   var pam = gwordd[p].split(/:/);
+                   params.push('##' + pam[0] + '##\t' + pam[1]);
+                 }
+               }
+               var txtn = textb.split(/\r\n|\r|\n/);
+               for (var i = 0 ; i < txt.length; i++) {
+                 if (txt[i].indexOf('[DEL]') == -1 && txt[i].indexOf(lname) == -1) {
+                   if (txt[i].indexOf('--') > -1) {
+                     rr = i + 1;
+                     i = txt.length + 1;
+                   } else {
+                     var parama = txt[i].split(/:/);
+                     params.push('##' + parama[0] + '##\t' + parama[1]);
+                   }
+                 }
+               }
+             }
+
+             for (var i = rr ; i < txt.length; i++) {
+               if (txt[i].length > 0) {
+                 if (txt[i].indexOf('[Run]') == -1 && txt[i].indexOf(lname) == -1 && txt[i].indexOf('[DEL]') == -1 && txt[i].indexOf('.menu') == -1 && txt[i].indexOf('[ok?]') == -1) {
+                   txt[i] = txt[i].replace(/&nbsp;/g, " ");
+                   txt[i] = forreplace(txt[i],params);
+                   if (i == 2) {
+                     strs = strs + txt[i].replace(/^ .*/g, "") + '\n';
+                   } else {
+                     strs = strs + txt[i] + '\n';
+                   }
+                 }
+               }
+             }
+
+             ext = ext + '#' + lname + '\n'+ strs + '\n';
+           }
+
+           var blobData = new window.Blob([ext],{type:'text/plain'});
+           saveAs(blobData, 'export_' + yyyymmdd + '.txt');
+        
+        });
+    });
+  }
+});
+
+//全コード／ドキュメントをクリアする
+$("#clear").click(function() {
+  $(document).ready(function(){
+    $('.faq').html('');
+    counts = 0;
+    window.localStorage.clear();
+    $("#username").prop('disabled', false);
+    //$("#username").val("");
+    mclose();
+  });
+});
+
+//ブラウザに開かれた時に動作する。Localstorageがあれば読み込む。
+$(document).ready(function(){
+  if (!window.localStorage) return;
+  var data = window.localStorage.getItem('autosave');
+  if (data != null) {
+    $('.faq').html('');
+    counts = 0;
+    var htmla = '';
+    var txt = data.split(/\r\n|\r|\n/);
+    var params = txt[0].split(/:/);
+    counts = Number(params[0]);
+    $("#username").val(params[1]);
+    for (var i = 1 ; i < txt.length; i++) {
+      htmla = htmla + txt[i];
+    }
+    $('.faq').html(htmla);
+  }
+
+  $("#username").val("kato");
+  switch_flg = 1;
+  $("#username").prop('disabled', true);
+  $(".toggle").html('<li class="toggle" style="background-color:#09C;">Custom</li>');
+  $(".toggle").css("background-color", "#F60");
+
+  setInterval(hyoji,30000);0
+});
+
+//メニューの[×]を押すとメニューをクローズする。ダイアログ表示するfunction用に関数化して呼び出せるようにしている
+function mclose() {
+  if (menus_flg == 0) {
+    $('#ham-menu').css('transform', 'translate(+300px)');
+    $(function(){
+      setTimeout(function(){
+          menus_flg = 1;
+      },500);
+    });
+  }
+}
+
+$("#menuclose").click(function() {
+  mclose();
+});
+
+//ハンバーガーアイコンをクリックするとメニューが開く
+$(document).on("click","[id^=ham-menu]", function() {
+  if (menus_flg == 1) {
+    $('#ham-menu').css('transform', 'translate(0px)');
+    $(function(){
+      setTimeout(function(){
+          menus_flg = 0;
+      },500);
+    });
+  }
+});
+
+//チュートリアルの表示
+$(document).on("click","[id^=help]", function() {
+  introJs().setOption('showButtons', 'true').start();
+});
+
+</script>
+</BODY>
+</HTML>
+

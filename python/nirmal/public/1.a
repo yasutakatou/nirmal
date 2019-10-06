@@ -1,0 +1,6 @@
+2,id,ip
+- hosts: ##ip##
+  remote_user: ##id##
+  tasks:
+    - name: id output
+    - shell: id

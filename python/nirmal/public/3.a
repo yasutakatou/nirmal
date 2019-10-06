@@ -1,0 +1,5 @@
+1,process
+- hosts: ##ip##
+  tasks:
+    - shell: ps w | grep -v grep | grep ##process##
+    - shell: free
